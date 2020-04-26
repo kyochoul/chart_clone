@@ -1,0 +1,122 @@
+<html>
+
+<head>
+    <title>This is an example of using Chart.JS with ThunkableX!</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://thunkable.github.io/webviewer-extension/thunkableWebviewerExtension.js"
+        type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.css" rel="stylesheet">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 1;
+        }
+
+        .chart-container {
+            height: 97%;
+            width: 95%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May','house','home','apartment','trailer'],
+                datasets: [{
+                    label: 'Corrects',
+                    data: [10, 60, 70, 180, 190, 250, 350, 450, 550],
+                    fill: false,
+                    borderColor: 'green',
+                    pointStyle: 'triangle',
+                    pointRadius: 10,
+                    pointHitRadius: 20,
+                    lineWidth: 10,
+                },
+                {
+                    label: 'Incorrects',
+                    data: [.10, 20, 30, 40, 50, .05, .5, 3, 8],
+                    fill: false,
+                    borderColor: 'red',
+                    pointStyle: 'star',
+                    pointRadius: 10,
+                    pointHitRadius: 20,
+                    lineWidth: 10,
+                }
+                ]
+            },
+            options: {
+              //  tooltips: {
+               //     titleFontSize: 30,
+               //     bodyFontSize: 30
+               // },
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: 'Chart Title',
+                    fontColor: 'Black',
+                   // fontSize: 30,
+                },
+                legend: {
+                    position: 'bottom',
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            //fontSize: 30,
+                            max: 90,
+                            maxTicksLimit: 6,
+                        }
+                    }],
+                    yAxes: [{
+                        type: 'logarithmic',
+
+                        ticks: {
+                            //fontSize: 30,
+                            autoSkip: false,
+                            min: .001,
+                            max: 1000,
+                            callback: function (value, index, values) {
+                                if (value == .001 || value == .01 || value == .1 || value == 1 || value == 10 || value == 100 || value == 1000) {
+                                    return value + '/min';
+                                }
+                            },
+                        }
+                    }],
+                },
+            },
+        });
+
+
+
+        // when we get a message from the app, display it on the page
+        // message should be a JSON string of a list of numbers
+        ThunkableWebviewerExtension.receiveMessage(function (message) {
+            try {
+
+                var messageList = JSON.parse(message);
+
+                myChart.options.title.text = "new title";
+                myChart.data.datasets[0].data = messageList.corrects;
+                myChart.data.datasets[1].data = messageList.incorrects;
+                myChart.data.labels = messageList.xvalues;
+                myChart.update();
+
+
+            } catch (e) {
+                console.error("An error occurred. Message probably wasn't a JSON string of an array of numbers");
+            }
+        });
+    </script>
+</body>
+
+</html>
