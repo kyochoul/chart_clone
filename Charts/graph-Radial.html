@@ -38,12 +38,12 @@
         /*
               .c3-axis-y text {
                 font-size: 10px;
-                change the size of the fonts 
+                change the size of the fonts
               }
 
               .c3-axis-x text {
                 font-size: 10px;
-                /* change the size of the fonts 
+                /* change the size of the fonts
               }
             */
     </style>
@@ -105,7 +105,7 @@
 
                 var messageList = JSON.parse(message);
                 var titleName = messageList.title
-                document.getElementById('messageDisplay').innerHTML = "This chart is for " + messageList.title;
+                
                 chart.load({
                     columns: [
                         ['data1'].concat(messageList.data),
